@@ -21,7 +21,7 @@ This project contains the core functionality of the ebay platform upgrade soluti
 ## Who are the core contributors?
 We are a team in ebay's Global Platform Frameworks organization. Our charter is to enable one of the web's most popular place to excel, scale and evolve to new heights.
 
-Our expertise covers the full JVM and Web stacks, massive scale distributed systems, computer language analysis and transformation.
+Our expertise covers the full JVM and Web stacks, massive scale distributed systems, computer language analysis&transformation and beyond.
 
 ## Community input
 We seek input from developers across the globe to shape the future of this project. We are receptive to ideas, enhancements, features and code contributions.
