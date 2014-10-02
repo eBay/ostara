@@ -9,7 +9,7 @@ Ostara changes the code of the project based on the framework changes. We are bu
 ## Mission
 Make framework upgrades a breeze with high automation, accelerate the rate of framework innovations by making backwards compatibility a minor problem.
 
-## Wheere did it come from?
+## Where did it come from?
 This project contains the core functionality of the ebay platform upgrade solution used by it's Java platform.
 
 ## Development strategy
@@ -25,5 +25,3 @@ Our expertise covers the full JVM and Web stacks, massive scale distributed syst
 
 ## Community input
 We seek input from developers across the globe to shape the future of this project. We are receptive to ideas, enhancements, features and code contributions.
-
-Engage us today on [the forum](https://groups.google.com/d/forum/ostaraoss).
