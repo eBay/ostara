@@ -35,10 +35,10 @@ public class GitForkCmdTest {
 
       String organization = "UpgradeTest";
       Config gitconfig = Config.getInstance();
-      gitconfig.setGitAPIUrl("https://github.corp.ebay.com/api/v3/repos/");
+      gitconfig.setGitAPIUrl("https://github.com/api/v3/repos/");
       gitconfig.setOrganization("UpgradeTest");
 
-      attrs.put("fork1.gitUrl", "https://github.corp.ebay.com/zhoshen/webres-sample");
+      attrs.put("fork1.gitUrl", "https://github.com/ostara/webres-sample");
       attrs.put("fork1.username", "platformupgradeservice");
       attrs.put("fork1.password", "dummy");
       attrs.put("fork1.organization", organization);

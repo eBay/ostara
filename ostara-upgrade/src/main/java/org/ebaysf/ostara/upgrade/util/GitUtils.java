@@ -54,7 +54,7 @@ public class GitUtils {
 		// Get date 1 year ago
 		String date = getISODate(1);
 
-		String url = "https://github.scm.corp.ebay.com/api/v3/repos/"
+		String url = "https://github.com/api/v3/repos/"
 				+ parts[parts.length - 2]
 				+ "/"
 				+ parts[parts.length - 1].substring(0,
@@ -73,7 +73,7 @@ public class GitUtils {
 			// if no committers  found in last 1 year then check last 2 year 
 			if (ar.length() == 0) {
 				date = getISODate(2);
-				url = "https://github.scm.corp.ebay.com/api/v3/repos/"
+				url = "https://github.com/api/v3/repos/"
 						+ parts[parts.length - 2]
 						+ "/"
 						+ parts[parts.length - 1].substring(0,

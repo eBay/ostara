@@ -50,9 +50,7 @@ public enum Database {
 		
 		if(mongoHostOverride == null) {
 			mongoClient = new MongoClient(Arrays.asList(
-				new ServerAddress("phx5qa01c-9e7a.stratus.phx.qa.ebay.com", DEFAULT_MONGO_PORT),
-				new ServerAddress("phx5qa01c-4eab.stratus.phx.qa.ebay.com", DEFAULT_MONGO_PORT),
-				new ServerAddress("phx5qa01c-3d76.stratus.phx.qa.ebay.com", DEFAULT_MONGO_PORT)));
+				new ServerAddress("localhost", DEFAULT_MONGO_PORT)));
 		} else {
 			mongoClient = new MongoClient(new ServerAddress(mongoHostOverride, DEFAULT_MONGO_PORT));
 		}

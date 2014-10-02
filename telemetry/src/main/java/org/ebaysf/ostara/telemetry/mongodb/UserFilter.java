@@ -16,8 +16,7 @@
 package org.ebaysf.ostara.telemetry.mongodb;
 
 public class UserFilter {
-  static final String[] KNOWN_PREFIXES = {"renyedi", "suliao", "zhoshen", "sraveesh", "ranagarajan", "ramahadevan", "nsankaran", "vgadiyar", "rbhogi", "scdavidson", "sonsinha", 
-	  "hubharani", "manand", "vekannan", "dgaglani", "ricgupta", "hitpanchal", "lsharma", "erbarber", "ssathyanarayan"};
+  static final String[] KNOWN_PREFIXES = {"renyedi"};
   
   /** Low-tech filtering */
   public static boolean isTeamMember(String userId) {
