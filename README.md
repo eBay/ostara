@@ -25,3 +25,5 @@ Our expertise covers the full JVM and Web stacks, massive scale distributed syst
 
 ## Community input
 We seek input from developers across the globe to shape the future of this project. We are receptive to ideas, enhancements, features and code contributions.
+
+Engage us today on [the forum](https://groups.google.com/d/forum/ostaraoss).
