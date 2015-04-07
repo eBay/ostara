@@ -20,6 +20,7 @@
 
   <properties>
   	<resteasy.version>3.0.8.Final</resteasy.version>
+  	<slf4j.version>1.7.12</slf4j.version>
   </properties>
 
   <repositories>
@@ -99,9 +100,14 @@
 	<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
-		<version>1.7.5</version>
+		<version>${slf4j.version}</version>
 		</dependency>
 
+		<dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-simple</artifactId>
+		  <version>${slf4j.version}</version>
+		</dependency>
   </dependencies>
 
   <build>
