@@ -39,6 +39,9 @@ public class VersionUpgradeCmd extends BaseCommand {
 
    @Override
    public ICmdResult execute() {
+	   // TODO Pass UTF-8 encoding to ostara-upgrade
+	   // cmd.add("-Dfile.encoding=UTF-8"); // Make sure we don't mess up special characters in files
+	   
       CmdResult result = new CmdResult();
       try {
          String content = FileUtils.readFile(m_execDir + "/" + m_parentPomPath, "utf-8");
