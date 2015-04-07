@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.ostara.service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,8 +35,11 @@ import org.ostara.cmd.impl.VersionUpgradeCmd;
 import org.ostara.cmd.util.FileUtils;
 import org.ostara.config.Config;
 import org.ostara.task.TaskMetaRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TaskServiceInitializer {
+   private static Logger logger = LoggerFactory.getLogger(GitPullRequestCmd.class);
    private static boolean s_inited;
 
    public static void init() {
@@ -43,7 +47,16 @@ public class TaskServiceInitializer {
          InputStream in = null;
          try {
             //load config file
-            in = TaskServiceInitializer.class.getResourceAsStream("ostara.properties");
+        	String ostaraConfigOverride = System.getProperty("ostaraConfig");
+        	 
+        	if(ostaraConfigOverride != null) {
+        		logger.info("Loading config from file " + ostaraConfigOverride);
+        		in = new FileInputStream(ostaraConfigOverride);
+        	} else {
+        		in = TaskServiceInitializer.class.getResourceAsStream("ostara.properties");
+        		logger.info("Loading config from the classpath");
+        	}
+            
             Config.getInstance().load(in);
 
             //load meta
