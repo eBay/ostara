@@ -22,7 +22,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.HashMap
 import java.util.Properties
-
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
 import org.apache.commons.lang.SystemUtils.JAVA_IO_TMPDIR
@@ -32,20 +31,15 @@ import org.apache.maven.model.Model
 import org.apache.maven.model.Plugin
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader
 import org.codehaus.plexus.util.xml.Xpp3Dom
-
 import org.ebaysf.ostara.upgrade.util.POMModifierUtil.getLatestVersion
-
 import grizzled.slf4j.Logging
-
 import PomReport._
-
 import java.io.InputStreamReader
 import java.io.BufferedWriter
 import java.io.FileWriter
-
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer
-
 import scala.collection.JavaConversions._
+import org.apache.maven.model.PluginManagement
 
 object MigratorUtils extends Logging {
   val POM_XML = "pom.xml"
@@ -164,13 +158,42 @@ object MigratorUtils extends Logging {
     p
   }
   
-  def findPlugin(plugins:List[Plugin], groupId:String, artifactId:String):Plugin = {
+  def findPlugin(plugins:Seq[Plugin], groupId:String, artifactId:String):Plugin = {
     for(p <- plugins) {
       if (p.getGroupId == groupId && p.getArtifactId == artifactId) return p 
     }
     
     return null
   }
+  
+      
+  def adjustPluginVersions(plugins:java.util.List[Plugin], managedPlugins:java.util.List[Plugin], report:PomReport, pluginManagement:Boolean = false) {
+     var pluginsToRemove = Set[Plugin]()
+     
+     for(plugin <- asScalaBuffer(plugins)) {
+       debug(s"Checking plugin $plugin")
+       
+       import scala.collection.JavaConversions._
+       
+       // Check if it's managed
+       val managedPlugin = findPlugin(managedPlugins, plugin.getGroupId(), plugin.getArtifactId())
+       
+     if(managedPlugin != null) {
+       val dep = createNiceDependency(plugin.getGroupId(), plugin.getArtifactId())
+       
+         if(pluginManagement) {
+         pluginsToRemove += plugin
+         report.addMissingArtifact(dep, NOT_MISSING, s"Removed plugin from plugins management section because its version is managed by RaptorPlatform", null)
+       } else {
+         report.addMissingArtifact(dep, NOT_MISSING, s"Removed version override for plugin managed by RaptorPlatform", null)
+         plugin.setVersion(null)
+       }
+     }
+     }
+     
+     if(pluginManagement) for(plugin <- pluginsToRemove) plugins.remove(plugin)
+   }
+  
   
   def savePom(pomFile: File, model: Model, backup:Boolean=true): Unit = {
     if(backup) {

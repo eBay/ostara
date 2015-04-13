@@ -501,9 +501,18 @@ abstract class UpgradeMain extends Logging {
 
     val projectGroupId = if(model.getGroupId()!=null)model.getGroupId() else if(parentPom != null) parentPom.getGroupId() else null
     
+    // Remove versions from managed plugins
+    if(model.getBuild() != null && model.getBuild().getPluginManagement() != null) {
+       MigratorUtils.adjustPluginVersions(model.getBuild().getPluginManagement().getPlugins(), platformModel.getBuild().getPluginManagement().getPlugins(), crtReport, true)
+    }
+    
     val dependencyManagement = processDependencyManagement(model, crtReport, false, parentPomProperties, projectGroupId, model.getPackaging(), crtUpgradePaths) // always process since we may add dependency management
     if (!dependencyManagement.getDependencies().isEmpty()) {
       model.setDependencyManagement(dependencyManagement)
+    }
+
+    if (model.getBuild() != null) {
+      MigratorUtils.adjustPluginVersions(model.getBuild().getPlugins(), platformModel.getBuild().getPluginManagement().getPlugins(), crtReport)
     }
     
     val dependencies = processDependencies(model.getDependencies.toList, crtReport, bHasParent, projectGroupId=projectGroupId, projectType=model.getPackaging()) // always process since we may add dependency
