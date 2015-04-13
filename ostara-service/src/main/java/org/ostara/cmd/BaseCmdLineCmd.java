@@ -81,7 +81,7 @@ public abstract class BaseCmdLineCmd extends BaseCommand {
 
 				for (String s : cmdLine) {
 					s = s.replaceFirst("https://.*[@]", "https://");
-					cmdToLog.append(s);
+					cmdToLog.append(s).append(" ");
 				}
 
 				logger.info("Executing process: " + cmdToLog);
