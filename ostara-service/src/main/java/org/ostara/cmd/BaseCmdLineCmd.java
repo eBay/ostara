@@ -77,7 +77,14 @@ public abstract class BaseCmdLineCmd extends BaseCommand {
 				processBuilder.redirectErrorStream(true);
 				processBuilder.directory(new File(cmdExecDir));
 
-				logger.info("Executing process: " + cmdLine);
+				StringBuilder cmdToLog = new StringBuilder();
+
+				for (String s : cmdLine) {
+					s = s.replaceFirst("https://.*[@]", "https://");
+					cmdToLog.append(s);
+				}
+
+				logger.info("Executing process: " + cmdToLog);
 
 				p = processBuilder.command(cmdLine).start();
 				if (wait) {
