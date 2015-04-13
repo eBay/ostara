@@ -24,6 +24,7 @@ import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 import org.ostara.cmd.annotation.OutParameter;
 import org.ostara.cmd.util.FileUtils;
+import org.ostara.config.Config;
 
 @Command(description = "git clone command line task.")
 public class GitCloneCmd extends BaseCmdLineCmd {
@@ -69,11 +70,17 @@ public class GitCloneCmd extends BaseCmdLineCmd {
 
    @Override
    protected List<String> getCmdStrs() {
+	   Config config = Config.getInstance();
+	   
       // fix empty git repo issue
       if (m_gitUrl.endsWith("/")) {
          m_gitUrl = m_gitUrl.substring(0, m_gitUrl.length() - 2) + ".git";
       } else if (!m_gitUrl.endsWith(".git")) {
          m_gitUrl = m_gitUrl + ".git";
+      }
+      
+      if(m_gitUrl.startsWith("https://")) {
+    	  m_gitUrl = "https://" + config.getUserName() + ":" + config.getPassword() + "@" + m_gitUrl.substring(8);
       }
 
       List<String> cmd = new ArrayList<>();
