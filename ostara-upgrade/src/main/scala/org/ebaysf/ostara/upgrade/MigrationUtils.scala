@@ -178,17 +178,12 @@ object MigratorUtils extends Logging {
        // Check if it's managed
        val managedPlugin = findPlugin(managedPlugins, plugin.getGroupId(), plugin.getArtifactId())
        
-     if(managedPlugin != null) {
-       val dep = createNiceDependency(plugin.getGroupId(), plugin.getArtifactId())
-       
-         if(pluginManagement && plugin.getConfiguration() == null) {
-         pluginsToRemove += plugin
-         report.addMissingArtifact(dep, NOT_MISSING, s"Removed plugin from plugins management section because its version is managed by RaptorPlatform", null)
-       } else {
+       if(managedPlugin != null) {
+         val dep = createNiceDependency(plugin.getGroupId(), plugin.getArtifactId())
+         
          report.addMissingArtifact(dep, NOT_MISSING, s"Removed version override for plugin managed by RaptorPlatform", null)
          plugin.setVersion(null)
        }
-     }
      }
      
      if(pluginManagement) for(plugin <- pluginsToRemove) plugins.remove(plugin)
