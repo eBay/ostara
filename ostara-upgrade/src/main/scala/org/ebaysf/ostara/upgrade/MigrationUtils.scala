@@ -181,7 +181,7 @@ object MigratorUtils extends Logging {
      if(managedPlugin != null) {
        val dep = createNiceDependency(plugin.getGroupId(), plugin.getArtifactId())
        
-         if(pluginManagement) {
+         if(pluginManagement && plugin.getConfiguration() == null) {
          pluginsToRemove += plugin
          report.addMissingArtifact(dep, NOT_MISSING, s"Removed plugin from plugins management section because its version is managed by RaptorPlatform", null)
        } else {
@@ -217,7 +217,41 @@ object MigratorUtils extends Logging {
 	}
   
   def getRelativePath(pomFile:File, parentPomFile:File):String = parentPomFile.toURI().relativize(pomFile.toURI()).toString();
- 
+ /*
+    def checkDependenciesAvailability(deps:java.util.List[Dependency], updateToLatest:Boolean = false, report:PomReport, projectArtifacts:java.util.List[(File, Dependency)], dependencyManagement:Boolean, properties:List[java.util.Properties], projectGroupId:String=null) {
+    var depsToRemove = Set[Dependency]()
+    
+    import scala.collection.JavaConversions._
+    
+    for(dep <- asScalaBuffer(deps)) {
+      debug(s"Looking for artifact $dep")
+
+      // Check if it belongs to the project
+      if(findDependency(projectArtifacts.map(_._2), dep, false, projectGroupId)) {
+        debug(s"Skipping dependency as it belongs to the project: $dep")
+      } else
+        if(findDependency(UpgradeMain.platformModel.getDependencyManagement().getDependencies(), dep, false)) { // Check if it's managed
+          if(!StringUtils.isEmpty(dep.getVersion())) {
+            if(dependencyManagement) {
+              if(!UpgradeMain.provider) {
+              depsToRemove += dep
+              report.addMissingArtifact(dep, NOT_MISSING, s"Removed artifact from dependency management section because its version is managed by RaptorPlatform", null)
+              }
+            } else {
+              if(!UpgradeMain.provider) {
+                report.addMissingArtifact(dep, NOT_MISSING, s"Removed version override for artifact managed by RaptorPlatform", null)
+                dep.setVersion(null)
+              }
+            }
+          }
+        } else {
+          UpgradeMain.checkArtifactAvailability(dep, updateToLatest, report, properties)
+        }
+    }
+    
+    if(dependencyManagement) for(dep <- depsToRemove) deps.remove(dep)
+  }*/
+  
   def getLatestArtifactVersion(repo:String, gid:String, aid:String):String= {
 
     import org.ebaysf.ostara.upgrade.util.POMModifierUtil._
