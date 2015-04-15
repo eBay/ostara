@@ -51,7 +51,7 @@ object UpgradeAddonRegistry extends Logging {
     if(disabled.isEmpty) {
       info("No disabled addons")
     } else {
-    	info(s"Disabled addons: $disabled")
+    	info(s"Disabled addons: ${disabled.mkString}")
     }
   }
     
