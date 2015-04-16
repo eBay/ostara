@@ -169,19 +169,6 @@ abstract class UpgradeMain extends Logging {
       if(!inputLocation.isAbsolute()) inputLocation = new File(".", inputOptionValue).getCanonicalFile()
       
       if(migrateAll(inputLocation)) {
-        if(line.hasOption(SKIP_ADDONS_OPTION)) {
-          info("Skipping addons per user's request")
-        } else {
-          info("Running addons")
-          for(u <- upgradePath) {
-            try {
-              u.runAddons(if(inputLocation.isDirectory) inputLocation else inputLocation.getParentFile, org.apache.commons.lang.CharEncoding.UTF_8, urb)
-            } catch {
-              case th:Throwable => warn(s"Fatal error while running an addon. Consider running the tool again with the $SKIP_ADDONS_OPTION option.", th)
-            }
-          }
-        }
-        
         info("DONE")
         
         val upgradeReportFile = new File("platform-upgrade-report" + buildUniqueFileSuffix() + ".md")
@@ -445,6 +432,19 @@ abstract class UpgradeMain extends Logging {
         }
         
         if(doSavePom) MigratorUtils.savePom(pomFile, model, !disableBackup)
+        
+        if(line!= null && line.hasOption(SKIP_ADDONS_OPTION)) {
+          info("Skipping addons per user's request")
+        } else {
+          info("Running addons")
+          for(u <- upgradePath) {
+            try {
+              u.runAddons(pomFile.getParentFile, org.apache.commons.lang.CharEncoding.UTF_8, urb)
+            } catch {
+              case th:Throwable => warn(s"Fatal error while running an addon. Consider running the tool again with the $SKIP_ADDONS_OPTION option.", th)
+            }
+          }
+        }
         
         model
       } else null /* The POM file was deleted. Forget about it. */
