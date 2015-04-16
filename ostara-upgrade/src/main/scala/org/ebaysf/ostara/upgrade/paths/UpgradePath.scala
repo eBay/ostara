@@ -47,7 +47,7 @@ abstract class UpgradePath {
   def getMappedPlugins: Map[NiceDependency, NiceDependency] = Map()
   def getRemovedPlugins: List[NiceDependency] = List()
   
-  def runAddons(projectRootDir:File, urb:UpgradeReportBuilder) {}
+  def runAddons(projectRootDir:File, projectEncoding:String, urb:UpgradeReportBuilder) {}
 
   def preprocessProject(pomFile:File, parentPom:Model, line:CommandLine, crtReport:PomReport):PreprocessResult.Type = { return PreprocessResult.DoNothing }
   def postprocessProject(pomFile:File, model:Model) {}

@@ -55,18 +55,17 @@ object UpgradeAddonRegistry extends Logging {
     }
   }
     
-  def runAddon(id:String, projectRootDir:File, urb:UpgradeReportBuilder) {
+  def runAddon(id:String, projectRootDir:File, projectEncoding:String, urb:UpgradeReportBuilder) {
     if(disabledAddons.contains(id)) {
       warn(s"Skipping addon $id as it was disabled")
+    } else 
+    if(!addons.contains(id)) {
+      warn(s"Unregistered addon $id")
     } else {
     	val addon = addons(id)
     	
-    	if(addon != null) {
-    	  info(s"Running addon $id")
-    	  addon.run(projectRootDir, urb)
-    	} else {
-    	  warn(s"Unregistered addon $id")
-    	}
+  	  info(s"Running addon $id")
+  	  addon.run(projectRootDir, urb)
     }
   }
 }

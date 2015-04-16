@@ -175,7 +175,7 @@ abstract class UpgradeMain extends Logging {
           info("Running addons")
           for(u <- upgradePath) {
             try {
-              u.runAddons(if(inputLocation.isDirectory) inputLocation else inputLocation.getParentFile, urb)
+              u.runAddons(if(inputLocation.isDirectory) inputLocation else inputLocation.getParentFile, org.apache.commons.lang.CharEncoding.UTF_8, urb)
             } catch {
               case th:Throwable => warn(s"Fatal error while running an addon. Consider running the tool again with the $SKIP_ADDONS_OPTION option.", th)
             }
