@@ -30,7 +30,7 @@ import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.{SystemUtils, StringUtils}
 import org.apache.log4j.PropertyConfigurator
 import org.apache.maven.model.Dependency
 import org.apache.maven.model.DependencyManagement
@@ -44,7 +44,6 @@ import org.codehaus.plexus.util.xml.Xpp3Dom
 import grizzled.slf4j.Logger
 import grizzled.slf4j.Logging
 import org.ebaysf.ostara.telemetry.mongodb._
-import org.ebaysf.ostara.upgrade.UpgradeReportBuilder
 import org.ebaysf.ostara.upgrade.paths.UpgradePath
 import org.ebaysf.ostara.upgrade.paths.UpgradeAddonRegistry
 import org.ebaysf.ostara.upgrade.paths.PreprocessResult
@@ -437,9 +436,13 @@ abstract class UpgradeMain extends Logging {
           info("Skipping addons per user's request")
         } else {
           info("Running addons")
+          // Checking for encoding overrides. Note that these are _not_ inherited from parent (http://docs.codehaus.org/display/MAVENUSER/MavenPropertiesGuide).
+          val sourceEncoding = model.getProperties.getProperty("project.build.sourceEncoding", System.getProperty(SystemUtils.FILE_ENCODING))
+          info(s"Running addons with $sourceEncoding encoding")
+          
           for(u <- upgradePath) {
             try {
-              u.runAddons(pomFile.getParentFile, org.apache.commons.lang.CharEncoding.UTF_8, urb)
+              u.runAddons(pomFile.getParentFile, sourceEncoding, urb)
             } catch {
               case th:Throwable => warn(s"Fatal error while running an addon. Consider running the tool again with the $SKIP_ADDONS_OPTION option.", th)
             }
