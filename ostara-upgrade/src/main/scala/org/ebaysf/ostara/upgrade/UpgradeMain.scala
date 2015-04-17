@@ -327,6 +327,10 @@ abstract class UpgradeMain extends Logging {
       MigratorUtils.savePom(parentPomFile, parentPom, !disableBackup)
     }
     
+    for(crtPathSegment <- upgradePath) {
+      crtPathSegment.postProcessAll(urb)
+    }
+    
     true
   }
 

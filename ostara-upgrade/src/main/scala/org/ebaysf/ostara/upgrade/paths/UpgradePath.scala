@@ -52,6 +52,8 @@ abstract class UpgradePath {
   def preprocessProject(pomFile:File, parentPom:Model, line:CommandLine, crtReport:PomReport):PreprocessResult.Type = { return PreprocessResult.DoNothing }
   def postprocessProject(pomFile:File, model:Model) {}
   
+  def postProcessAll(urb:UpgradeReportBuilder): Unit = {}
+  
   def adjustParentDependencies(parentPom: Model, model: Model, pomFile: File) {}
   
   def checkPlatformAncestor(parent: Parent, adjust:Boolean = true): Boolean = false

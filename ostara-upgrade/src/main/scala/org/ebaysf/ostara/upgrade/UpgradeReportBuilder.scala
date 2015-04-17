@@ -73,6 +73,8 @@ class UpgradeReportBuilder extends Logging {
   var pathToParentPom:File = _
   var changes = Map[String/*relative path*/, BaseReport]()
   
+  var manualChecksAndChanges = List[String]()
+  
   def appMetadataFileName:String = ""
   def platformName:String = "Ostara dummy platform"
   def disclaimer(teamDL:String):String = "This is totally safe to use, probably"
@@ -202,9 +204,12 @@ Artifact | Description
 s"""
 <a name="manualChecksAndChanges"/>
 ## Additional manual checks and changes
-${additionalManualChecksAndChanges}
 """
-    
+
+    for(manualCheckAndChange <- manualChecksAndChanges) {
+      report += manualCheckAndChange
+    }
+
     report +=
 s"""
 <a name="automatedChanges"/>
