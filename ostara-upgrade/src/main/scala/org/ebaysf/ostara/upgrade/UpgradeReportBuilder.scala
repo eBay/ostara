@@ -52,7 +52,7 @@ class PomReport extends BaseReport {
   }
   
   def addMissingArtifact(dep:NiceDependency, depType:Int = PomReport.NOT_MISSING, description:String, repo:List[String]=null) {
-    warn(s"Dependency ananlysis of $dep: \n$description")
+    warn(s"Dependency analysis of $dep: \n$description")
     missingArtifacts += (dep -> (depType, description, repo))
   }
 }
