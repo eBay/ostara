@@ -432,19 +432,23 @@ abstract class UpgradeMain extends Logging {
         
         if(doSavePom) MigratorUtils.savePom(pomFile, model, !disableBackup)
         
-        if(line!= null && line.hasOption(SKIP_ADDONS_OPTION)) {
-          info("Skipping addons per user's request")
-        } else {
+        if(model.getPackaging() == "pom") {
+          info("No addons run on a POM aggregator project")
+         } else {
           info("Running addons")
-          // Checking for encoding overrides. Note that these are _not_ inherited from parent (http://docs.codehaus.org/display/MAVENUSER/MavenPropertiesGuide).
-          val sourceEncoding = model.getProperties.getProperty("project.build.sourceEncoding", System.getProperty(SystemUtils.FILE_ENCODING))
-          info(s"Running addons with $sourceEncoding encoding")
+          if (line != null && line.hasOption(SKIP_ADDONS_OPTION)) {
+            info("Skipping addons per user's request")
+          } else {
+            // Checking for encoding overrides. Note that these are _not_ inherited from parent (http://docs.codehaus.org/display/MAVENUSER/MavenPropertiesGuide).
+            val sourceEncoding = model.getProperties.getProperty("project.build.sourceEncoding", System.getProperty(SystemUtils.FILE_ENCODING))
+            info(s"Running addons with $sourceEncoding encoding")
           
-          for(u <- upgradePath) {
-            try {
-              u.runAddons(pomFile.getParentFile, sourceEncoding, urb)
-            } catch {
-              case th:Throwable => warn(s"Fatal error while running an addon. Consider running the tool again with the $SKIP_ADDONS_OPTION option.", th)
+            for (u <- upgradePath) {
+              try {
+                u.runAddons(pomFile.getParentFile, sourceEncoding, urb)
+              } catch {
+                case th: Throwable => warn(s"Fatal error while running an addon. Consider running the tool again with the $SKIP_ADDONS_OPTION option.", th)
+              }
             }
           }
         }
