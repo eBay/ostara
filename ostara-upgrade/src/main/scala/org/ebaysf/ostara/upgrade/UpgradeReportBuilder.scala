@@ -22,6 +22,8 @@ import java.io.File
 import org.apache.maven.model.Dependency
 
 class BaseReport extends Logging {
+  var automated:Boolean = _;
+  
   var manualChanges = Map[String, String]()
   var warnings = Map[String, String]()
 
@@ -63,6 +65,19 @@ class JavaFileReport extends BaseReport {
 
 class WebXmlReport extends BaseReport {
   var changes = 0
+}
+
+/**
+ * File specific changes
+ */
+class FileReport extends BaseReport {
+  var message:String = _;
+
+  def this(msg:String, atmtd:Boolean) {
+    this()
+    this.message = msg
+    automated = atmtd
+  }
 }
 
 /**
@@ -206,8 +221,22 @@ s"""
 ## Additional manual checks and changes
 """
 
-    for(manualCheckAndChange <- manualChecksAndChanges) {
-      report += manualCheckAndChange
+  for(manualCheckAndChange <- manualChecksAndChanges) {
+    report += manualCheckAndChange
+  }
+
+  for(change <- changes;
+      if !change._2.automated;
+      if change._2.isInstanceOf[FileReport]) {
+        val crtFile = FilenameUtils.separatorsToUnix(change._1)
+
+        report +=
+s"""
+### File [$crtFile]($crtFile)
+"""
+
+      val fileReport: FileReport = change._2.asInstanceOf[FileReport]
+      report += fileReport.message
     }
 
     report +=
@@ -218,7 +247,8 @@ This section lists all the changes that were automatically applied to the origin
 Please consult the changeset for the definitive list of changes made by the upgrade service as some of those might not be described below.
 
     """
-    for(change <- changes) {
+   for(change <- changes;
+     if change._2.automated) {
      val crtFile = FilenameUtils.separatorsToUnix(change._1)
 
      report += 
@@ -326,6 +356,10 @@ The following plugins were removed from the POM:
       } else
       if(change._2.isInstanceOf[JavaFileReport]) {
         report += "Java code changes.\n"
+      } else
+      if(change._2.isInstanceOf[FileReport]) {
+       val fileReport: FileReport = change._2.asInstanceOf[FileReport]
+       report += fileReport.message
       } else {
         val additionalReport = handleAdditionalReportTypes(change._2)
         
