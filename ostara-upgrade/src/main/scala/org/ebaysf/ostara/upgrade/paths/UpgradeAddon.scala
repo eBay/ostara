@@ -30,7 +30,7 @@ trait UpgradeAddon {
   val sourceVersion: PlatformVersion
   val targetVersion: PlatformVersion
   
-  def run(projectRootDir:File, urb:UpgradeReportBuilder);
+  def run(projectRootDir:File, projectEncoding:String, urb:UpgradeReportBuilder);
 }
 
 object UpgradeAddonRegistry extends Logging {
@@ -65,7 +65,7 @@ object UpgradeAddonRegistry extends Logging {
     	val addon = addons(id)
     	
   	  info(s"Running addon $id")
-  	  addon.run(projectRootDir, urb)
+  	  addon.run(projectRootDir, projectEncoding, urb)
     }
   }
 }
