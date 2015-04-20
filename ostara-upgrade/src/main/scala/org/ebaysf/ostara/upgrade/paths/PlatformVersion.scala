@@ -26,6 +26,6 @@ trait PlatformVersionManager {
   var versions:Seq[PlatformVersion] = Seq()
   
   def parseVersion(ver:String):PlatformVersion
-  
-  def upgradePaths(ver:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradePath]
+  def processPlatformVersion(raptorPlatformVersion: String, parentVersion:PlatformVersion): String
+  def upgradePaths(raptorSourceVersion:PlatformVersion, raptorTargetVersion:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradePath]
 }

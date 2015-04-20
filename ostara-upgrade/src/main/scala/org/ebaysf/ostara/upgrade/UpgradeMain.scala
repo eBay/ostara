@@ -477,7 +477,11 @@ abstract class UpgradeMain extends Logging {
     if(checkPlatformAncestor(parent, false)) {
       info("A platform parent was detected, adjusting upgrade paths accordingly")
       
-      upgradePath = getPlatformVersionManager.upgradePaths(getPlatformVersionManager.parseVersion(parent.getVersion()), parent, crtReport)
+      val platformSourceVersion = getPlatformVersionManager.parseVersion(parent.getVersion())
+      platformVersion = getPlatformVersionManager.processPlatformVersion(platformVersion, platformSourceVersion);
+      val platformTargetVersion = getPlatformVersionManager.parseVersion(platformVersion)
+      
+      upgradePath = getPlatformVersionManager.upgradePaths(platformSourceVersion, platformTargetVersion, parent, crtReport)
       
       info(s"Detected platform version ${parent.getVersion()} and applying these upgrade paths: ${upgradePath.map(_.getClass().getSimpleName()).mkString(", ")}")
     }
