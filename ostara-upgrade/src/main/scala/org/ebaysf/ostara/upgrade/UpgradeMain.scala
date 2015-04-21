@@ -52,8 +52,9 @@ import org.ebaysf.ostara.upgrade.util._
 import MigratorUtils._
 
 abstract class UpgradeMain extends Logging {
-  val APP_TYPE_MESSAGING = "Messaging"
-  val APP_TYPE_BATCH = "Batch"
+  val APP_TYPE_MESSAGING = "messaging"
+  val APP_TYPE_BATCH = "batch"
+  val APP_TYPE_SERVICE = "service"
     
   def platformGroupId:String = "org.ostara"
   def platformArtifactId:String = "ostara-supported-platform"
@@ -364,7 +365,7 @@ abstract class UpgradeMain extends Logging {
     }
   }
   
-  def getPlatformAppTypes():List[String] = if(platformAppTypeOverride != null) List(platformAppTypeOverride) else platformAppTypes
+  def getPlatformAppTypes():List[String] = (if(platformAppTypeOverride != null) List(platformAppTypeOverride) else platformAppTypes).map(/* inefficient, but elegant */ _.toLowerCase)
     
   def detectPlatformApplicationData(parentPomFile:File, force:Boolean = false) = {}
   
@@ -570,7 +571,7 @@ abstract class UpgradeMain extends Logging {
   }
 
   def processProject(model:Model, pomFile:File, parentPom:Model, crtReport:PomReport, crtUpgradePaths:Array[UpgradePath]) {
-    if(platformAppTypes.size == 1 && platformAppTypes(0) == APP_TYPE_BATCH)processBatchProject(model, pomFile, crtUpgradePaths, crtReport)
+    if(getPlatformAppTypes.size == 1 && getPlatformAppTypes()(0) == APP_TYPE_BATCH)processBatchProject(model, pomFile, crtUpgradePaths, crtReport)
     else model.getPackaging() match {
       case "war" => processWebOrServiceProject(model, pomFile, crtUpgradePaths, crtReport)
       case "bundle" => processLibraryProject(model)
