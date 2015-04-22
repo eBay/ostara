@@ -29,3 +29,12 @@ trait PlatformVersionManager {
   def processPlatformVersion(raptorPlatformVersion: String, parentVersion:PlatformVersion): String
   def upgradePaths(raptorSourceVersion:PlatformVersion, raptorTargetVersion:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradePath]
 }
+
+class DummyPlatformVersionManager extends PlatformVersionManager {
+  val dummyPlatformVersion = PlatformVersion("0.1")
+
+  def parseVersion(ver:String):PlatformVersion = dummyPlatformVersion
+  def processPlatformVersion(raptorPlatformVersion: String, parentVersion:PlatformVersion): String = "0.1"
+  def upgradePaths(raptorSourceVersion:PlatformVersion, raptorTargetVersion:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradePath] = Array()
+
+}

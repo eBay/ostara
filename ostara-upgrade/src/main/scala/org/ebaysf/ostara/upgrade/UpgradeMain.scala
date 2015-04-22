@@ -48,20 +48,32 @@ import org.ebaysf.ostara.upgrade.paths.UpgradePath
 import org.ebaysf.ostara.upgrade.paths.UpgradeAddonRegistry
 import org.ebaysf.ostara.upgrade.paths.PreprocessResult
 import org.ebaysf.ostara.upgrade.paths.PlatformVersionManager
+import org.ebaysf.ostara.upgrade.paths.DummyPlatformVersionManager
 import org.ebaysf.ostara.upgrade.util._
 import MigratorUtils._
 
-abstract class UpgradeMain extends Logging {
+class UpgradeMain extends Logging {
   val APP_TYPE_MESSAGING = "messaging"
   val APP_TYPE_BATCH = "batch"
   val APP_TYPE_SERVICE = "service"
     
+  def MAVEN_REPO_OLD_THIRDPARTY:String = ""
+  def MAVEN_REPO_OLD_RELEASES:String = ""
+  def MAVEN_REPOS_OLD:List[String] = List()
+  def MAVEN_REPO_NEW_THIRDPARTY:String = ""
+  def MAVEN_REPO_NEW_RELEASES:String = ""
+  def MAVEN_REPOS_NEW:List[String] = List()
+  def MAVEN_REPO_NEW_CENTRAL_PROXY:String = "https://repo1.maven.org/maven2/"
+  def OLD_THIRDPARTY_GROUPID_PREFIX:String = ""
+  
   def platformGroupId:String = "org.ostara"
   def platformArtifactId:String = "ostara-supported-platform"
   def defaultPlatformVersion:String  = "1.0.0"
     
   var platformVersion:String = defaultPlatformVersion
   private var _platformAppTypeOverride:String = _
+
+  def DEFAULT_LATEST_PLATFORM_VERSION = ""
   
   var taskid:String = _
   var disableBackup:Boolean = _
@@ -99,7 +111,7 @@ abstract class UpgradeMain extends Logging {
     
   var parentPomFile:File = _
 
-  def platformModel: Model
+  def platformModel: Model = null
   
   var projectArtifacts = List[(File, Dependency)]()
   
@@ -188,7 +200,7 @@ abstract class UpgradeMain extends Logging {
   }
   }
   
-  def platformGroupEmail():String
+  def platformGroupEmail():String = ""
   
   def buildUniqueFileSuffix():String = (if(taskid != null) ("-" + taskid) else "")
   
@@ -465,7 +477,7 @@ abstract class UpgradeMain extends Logging {
     }
   }
   
-  def getPlatformVersionManager():PlatformVersionManager
+  def getPlatformVersionManager():PlatformVersionManager = new DummyPlatformVersionManager()
   
   def beforeMigratePom(parentPom:Model, model:Model) = {}
   
@@ -839,15 +851,6 @@ import NiceDependency.ImplicitConversions._
     info(s"Deleting the distribution management section from ${MigratorUtils.POM_XML} as it's provided by the platform")
     model.setDistributionManagement(null)
   }
-  
-    def MAVEN_REPO_OLD_THIRDPARTY:String
-  def MAVEN_REPO_OLD_RELEASES:String
-  def MAVEN_REPOS_OLD:List[String]
-  def MAVEN_REPO_NEW_THIRDPARTY:String
-  def MAVEN_REPO_NEW_RELEASES:String
-  def MAVEN_REPOS_NEW:List[String]
-  def MAVEN_REPO_NEW_CENTRAL_PROXY:String
-  def OLD_THIRDPARTY_GROUPID_PREFIX:String
     
   def checkDependenciesAvailability(deps:java.util.List[Dependency], updateToLatest:Boolean = false, report:PomReport, projectArtifacts:java.util.List[(File, Dependency)], dependencyManagement:Boolean, properties:List[java.util.Properties], projectGroupId:String=null, provider:Boolean, platformManagedDeps:java.util.List[Dependency]) {
     var depsToRemove = Set[Dependency]()
