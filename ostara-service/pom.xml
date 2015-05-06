@@ -135,6 +135,15 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <attachClasses>true</attachClasses>
+          <archiveClasses>true</archiveClasses>
+        </configuration>
+      </plugin>
     </plugins>
     <finalName>ostara</finalName>
   </build>
