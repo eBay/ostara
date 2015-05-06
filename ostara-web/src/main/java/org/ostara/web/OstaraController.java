@@ -13,10 +13,15 @@ import org.springframework.web.servlet.ModelAndView;
 public class OstaraController {
 	  private static Logger logger = LoggerFactory.getLogger(OstaraController.class);
 
-	  @RequestMapping(value="upgrade", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+	  @RequestMapping(value="login", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
 	  @ResponseBody
-	  public ModelAndView upgrade() {
-	    return new ModelAndView("showMessage");
+	  public ModelAndView login() {
+	    return new ModelAndView("login");
 	  }
 
+	  @RequestMapping(value="index", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+	  @ResponseBody
+	  public ModelAndView index() {
+	    return new ModelAndView("index");
+	  }
 }
