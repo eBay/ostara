@@ -5,6 +5,7 @@ package org.ostara.service;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
@@ -29,14 +30,14 @@ public class GitController {
 	@GET
 	@Path(value = "{org}/{repo}/branches")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Object branches(@QueryParam("org") String organization, @QueryParam("repo") String repository, @QueryParam("page") int page, @QueryParam("per_page") int perPage) {
+	public Object branches(@PathParam("org") String organization, @PathParam("repo") String repository, @QueryParam("page") int page, @QueryParam("per_page") int perPage) {
 		return callGitHub(organization, repository, "branches", "?page=" + page + "&per_page=" + perPage);
 	}
 	
 	@GET
 	@Path(value = "{org}/{repo}/contents")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Object contents(@QueryParam(value="org") String organization, @QueryParam(value="repo") String repository, 
+	public Object contents(@PathParam(value="org") String organization, @PathParam(value="repo") String repository, 
 			@QueryParam(value="path") String path, @QueryParam(value="branch") String branch) {
 
 		organization = StringUtils.trimToEmpty(organization);
@@ -63,13 +64,15 @@ public class GitController {
 			
 	        WebTarget target = client.register(new Authenticator(Config.getInstance().getUserName(), Config.getInstance().getPassword())).target(url);
 	        Response response = target.request().get();
+	        String value = response.readEntity(String.class);
 	        
 	        if (response.getStatus() != 200) {
-		    	logger.warn("Response status is NOT OK (" + response.getStatus() + ") for URL: " + url);
+		    	logger.warn("Response status is NOT OK (" + response.getStatus() + ", " + response.getStatusInfo() + ") for URL: " + url + "\nFull message: " + value);
 		    	return null;
+		    } else {
+		    	logger.info("Response OK");
 		    }
 	        
-	        String value = response.readEntity(String.class);
 	        response.close();  // You should close connections!
 			
 	        return value;
