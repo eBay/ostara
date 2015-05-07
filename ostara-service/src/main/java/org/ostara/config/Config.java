@@ -93,6 +93,10 @@ public class Config {
 	public String getGitAPIUrl() {
 		return gitAPIUrl;
 	}
+	
+	public String getGitAPIUserUrl() {
+		return getGitAPIUrl() + "/user";
+	}
 
 
 	public void setGitAPIUrl(String gitAPIUrl) {

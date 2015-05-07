@@ -26,7 +26,7 @@
 <!--     </context-param> -->
 	<context-param>
 		<param-name>resteasy.resources</param-name>
-		<param-value>org.ostara.service.TaskService</param-value>
+		<param-value>org.ostara.service.TaskServiceImpl,org.ostara.service.GitController</param-value>
 	</context-param>
     
     <context-param>
