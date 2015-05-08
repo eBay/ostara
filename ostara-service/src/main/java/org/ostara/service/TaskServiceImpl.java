@@ -33,11 +33,15 @@ import org.ostara.cmd.ICommand;
 import org.ostara.config.Config;
 import org.ostara.model.JobResult;
 import org.ostara.model.SubmitResult;
+import org.ostara.service.util.ReportData;
+import org.ostara.service.util.UpgradeStatusReportGen;
 import org.ostara.task.ITask;
 import org.ostara.task.ITaskMeta;
 import org.ostara.task.TaskExecutorManager;
 import org.ostara.task.TaskFactory;
 import org.ostara.task.TaskMetaRegistry;
+
+import com.google.gson.Gson;
 
 public class TaskServiceImpl implements TaskService {
    @Context
@@ -243,4 +247,12 @@ public class TaskServiceImpl implements TaskService {
 
       return result;
    }
+
+	@Override
+	public Object report() {
+		ReportData reportData = UpgradeStatusReportGen.getReportData();
+
+		Gson gson = new Gson();
+		return gson.toJson(reportData);
+	}
 }

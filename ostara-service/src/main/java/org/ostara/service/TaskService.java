@@ -57,4 +57,9 @@ public interface TaskService {
 	   String parentPom, @QueryParam("upgradeVersion")
 	   String upgradeVersion);
 
+	@GET
+	@Path("/report")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public abstract Object report();
+	
 }
