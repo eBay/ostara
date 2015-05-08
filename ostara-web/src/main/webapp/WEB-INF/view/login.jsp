@@ -14,8 +14,6 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
 <title>ostara: platform upgrades as a service</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css" href="resources/lib/boostrap3/css/bootstrap.min.css"/>
-<link rel="stylesheet" type="text/css" href="resources/lib/boostrap3/css/bootstrap-theme.min.css"/>
 <link rel="stylesheet" type="text/css" href="resources/css/font-awesome.min.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -40,7 +38,7 @@
 	<div class="container" style="margin-top: 2em">
 		<div>
 
-			<form id="login" role="form" class="form-signin" action="signin">
+			<form id="login" role="form" class="form-signin">
 				<h4 style="border-bottom: solid 1px #adadad; margin-bottom: 2em; padding-bottom: 8px">Sign in</h4>
 
 				<p>
@@ -82,6 +80,7 @@
 	</div>
 
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<script src="resources/js/JQuery_1_7.min.js"></script>
 	<script>
 		(function($win) {
 			if ($win.ostara == "undefined") {
