@@ -27,7 +27,7 @@
 
 	<header id="header">
 		<div id="logo-group">
-			<span id="logo"><img src="resources/img/raptor2-launch1_png" alt="Platform Upgrades as a Service"></span>
+			<span id="logo"><img src="resources/img/raptor2-launch1.png" alt="Platform Upgrades as a Service"></span>
 			<span id="navtitle" class="navtitle">Platform Upgrades as a Service<sup>Beta</sup></span>
 		</div>
 
