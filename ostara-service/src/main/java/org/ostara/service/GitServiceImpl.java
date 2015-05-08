@@ -3,13 +3,17 @@
  */
 package org.ostara.service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
 import org.ostara.config.Config;
+import org.ostara.service.git.auth.Auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +24,22 @@ import org.slf4j.LoggerFactory;
 
 public class GitServiceImpl implements GitService {
 	private static Logger logger = LoggerFactory.getLogger(GitServiceImpl.class);
+	
+   @Context
+   private HttpServletRequest servletRequest;
+	
+	@Override
+	public Object authenticate(String username) {
+		try {
+			String _pwd = servletRequest.getHeader("password");
+			String _gitOtp = servletRequest.getHeader("gitOtp");
+			Auth auth = new Auth(username, _pwd, _gitOtp);
+			return auth.authorize();
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			throw ex;
+		}
+	}
 	
 	@Override
 	public Object branches(String organization, String repository, int page, int perPage) {
