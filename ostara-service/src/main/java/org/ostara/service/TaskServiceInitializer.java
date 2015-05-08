@@ -57,26 +57,7 @@ public class TaskServiceInitializer {
         		logger.info("Loading config from the classpath");
         	}
             
-            Config.getInstance().load(in);
-
-            //load meta
-            TaskMetaRegistry.getInstance()
-                  .register(
-                        FileUtils.readStream(TaskServiceInitializer.class.getResource("upgradetask.json").openStream(),
-                              true));
-
-            //load command
-            register(CmdLineCmd.class);
-            register(GitAddCmd.class);
-            register(GitBranchCmd.class);
-            register(GitCheckoutCmd.class);
-            register(GitCloneCmd.class);
-            register(GitCommitCmd.class);
-            register(GitForkCmd.class);
-            register(GitPullRequestCmd.class);
-            register(GitReleaseVersionCmd.class);
-            register(RestAPICommand.class);
-            register(VersionUpgradeCmd.class);
+            init(in);
          } catch (Exception ex) {
             throw new RuntimeException("Failed to init TaskService, exception:" + ex.toString());
          } finally {
@@ -91,6 +72,29 @@ public class TaskServiceInitializer {
          s_inited = true;
       }
    }
+
+	public static void init(InputStream in) throws IOException {
+		Config.getInstance().load(in);
+	
+		//load meta
+		TaskMetaRegistry.getInstance()
+		      .register(
+		            FileUtils.readStream(TaskServiceInitializer.class.getResource("upgradetask.json").openStream(),
+		                  true));
+	
+		//load command
+		register(CmdLineCmd.class);
+		register(GitAddCmd.class);
+		register(GitBranchCmd.class);
+		register(GitCheckoutCmd.class);
+		register(GitCloneCmd.class);
+		register(GitCommitCmd.class);
+		register(GitForkCmd.class);
+		register(GitPullRequestCmd.class);
+		register(GitReleaseVersionCmd.class);
+		register(RestAPICommand.class);
+		register(VersionUpgradeCmd.class);
+	}
 
    private static void register(Class<? extends ICommand> clazz) {
       CmdRegistry.getInstance().register(clazz);
