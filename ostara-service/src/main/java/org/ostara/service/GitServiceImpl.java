@@ -3,15 +3,9 @@
  */
 package org.ostara.service;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,23 +17,18 @@ import org.slf4j.LoggerFactory;
  * @author ramahadevan
  */
 
-@Path("/git")
-public class GitController {
-	private static Logger logger = LoggerFactory.getLogger(GitController.class);
+
+public class GitServiceImpl implements GitService {
+	private static Logger logger = LoggerFactory.getLogger(GitServiceImpl.class);
 	
-	@GET
-	@Path(value = "{org}/{repo}/branches")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Object branches(@PathParam("org") String organization, @PathParam("repo") String repository, @QueryParam("page") int page, @QueryParam("per_page") int perPage) {
+	@Override
+	public Object branches(String organization, String repository, int page, int perPage) {
 		return callGitHub(organization, repository, "branches", "?page=" + page + "&per_page=" + perPage);
 	}
 	
-	@GET
-	@Path(value = "{org}/{repo}/contents")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Object contents(@PathParam(value="org") String organization, @PathParam(value="repo") String repository, 
-			@QueryParam(value="path") String path, @QueryParam(value="branch") String branch) {
-
+	@Override
+	public Object contents(String organization, String repository, String path,
+			String branch) {
 		organization = StringUtils.trimToEmpty(organization);
 		repository = StringUtils.trimToEmpty(repository);
 		path = StringUtils.trimToEmpty(path);
