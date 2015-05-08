@@ -121,7 +121,7 @@
 						function(e) {
 							$
 									.ajax({
-										url : 'authenticate',
+										url : "<c:out value="${OSTARA_SERVICE_URL}"/>" + 'authenticate',
 										type : 'post',
 										cache : false, // Don't cache the response
 										data : {

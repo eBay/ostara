@@ -118,7 +118,7 @@
                           <span title="Git repository URL" class="input-group-addon"><i
                             class="fa fa-github-alt fa-lg fa-fw"></i></span> <input
                             class="form-control input-lg"
-                            placeholder="https://github.corp.ebay.com/{GitOrg}/{GitRepo}.git"
+                            placeholder="https://github.com/{GitOrg}/{GitRepo}"
                             type="text" name="url" id="url" required />
                         </div>
                       </div>
@@ -438,7 +438,7 @@
       checkValidPathToPom: function(repositoryName, repositoryOrg, path) {
     	  console.log('pathtopom input' + repositoryName + ", " + repositoryOrg);
           
-        var url = "git/" + repositoryOrg + "/" + repositoryName + "/contents?path=" + encodeURI(path) + "&branch=" + $('#git-repo-branches').val();
+        var url = "<c:out value="${OSTARA_SERVICE_URL}"/>" + "git/" + repositoryOrg + "/" + repositoryName + "/contents?path=" + encodeURI(path) + "&branch=" + $('#git-repo-branches').val();
         $.get(url).done(function(cbResult) {
           console.log("result=" + cbResult);
           if (typeof cbResult === "undefined" || cbResult === null || cbResult === "") {
@@ -453,7 +453,7 @@
       fetchBranches : function(branchLooper, gitOrg, gitRepository, branches) {
     	  if(typeof(branches)==='undefined') branches = [];
     	  
-    	  var url = "git/" + gitOrg + "/" + gitRepository + "/branches?page=" + branchLooper + "&per_page=100";
+    	  var url = "<c:out value="${OSTARA_SERVICE_URL}"/>" + "git/" + gitOrg + "/" + gitRepository + "/branches?page=" + branchLooper + "&per_page=100";
 	        
 	      console.log("url for page " + branchLooper + "=" + url)
     	  

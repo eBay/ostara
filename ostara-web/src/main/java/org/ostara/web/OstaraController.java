@@ -12,16 +12,27 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class OstaraController {
 	  private static Logger logger = LoggerFactory.getLogger(OstaraController.class);
+	  
+	  private static final String OSTARA_SERVICE_URL;
+	  
+	  static {
+		  String sysProp = System.getProperty("ostaraServiceURL");
+		  if(sysProp == null) {
+			  OSTARA_SERVICE_URL = ""; // Local
+		  } else {
+			  OSTARA_SERVICE_URL = sysProp;
+		  }
+	  }
 
 	  @RequestMapping(value="login", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
 	  @ResponseBody
 	  public ModelAndView login() {
-	    return new ModelAndView("login");
+	    return new OstaraModelAndView("login", OSTARA_SERVICE_URL);
 	  }
 
 	  @RequestMapping(value="index", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
 	  @ResponseBody
 	  public ModelAndView index() {
-	    return new ModelAndView("index");
+		return new OstaraModelAndView("login", OSTARA_SERVICE_URL);
 	  }
 }
