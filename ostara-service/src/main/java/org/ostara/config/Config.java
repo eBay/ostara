@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.lang.SystemUtils;
+
 
 public class Config {
 	private static Config m_instance = new Config();
@@ -26,6 +28,8 @@ public class Config {
 	private String password;
 	private String organization;
 	private String gitAPIUrl;
+	private String migrationJarName;
+	private String ostaraCmdMavenRepoUrl;
 	
 	public static Config getInstance() {
 		return m_instance;
@@ -47,6 +51,7 @@ public class Config {
 				password=prop.getProperty("password");
 				organization=prop.getProperty("organization");
 				gitAPIUrl=prop.getProperty("gitAPIUrl");
+				ostaraCmdMavenRepoUrl=prop.getProperty("ostaraCmdMavenRepoUrl");
 			} else {
 				System.err.println("no config file found");
 			}
@@ -102,7 +107,22 @@ public class Config {
 	public void setGitAPIUrl(String gitAPIUrl) {
 		this.gitAPIUrl = gitAPIUrl;
 	}
+
+
+	public void setMigrationJarName(String migrationJarName) {
+		this.migrationJarName = migrationJarName;
+	}
 	
-	
+	public String getMigrationJarName() {
+		return this.migrationJarName;
+	}
+
+	public String getMigrationWorkdir() {
+		return SystemUtils.JAVA_IO_TMPDIR + "/migration";
+	}
+
+	public String getOstaraCmdMavenRepoUrl() {
+		return ostaraCmdMavenRepoUrl;
+	}
 
 }
