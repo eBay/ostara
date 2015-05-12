@@ -26,6 +26,9 @@ import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 import org.ostara.cmd.util.FileUtils;
 
+/**
+ * Pushes the local commits to the remote Git repository.
+ */
 @Command(description = "git push cmd")
 public class GitPushCmd extends BaseCmdLineCmd {
    @InParameter(name = "gitDir", requried = true)

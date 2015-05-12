@@ -29,6 +29,9 @@ import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 import org.ostara.cmd.annotation.OutParameter;
 
+/**
+ * A generic command for RESTful operations.
+ */
 @Command(description = "restful api command")
 public class RestAPICommand extends BaseCommand {
    @InParameter(name = "serviceUrl", requried = true)

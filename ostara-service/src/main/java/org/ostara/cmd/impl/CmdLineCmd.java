@@ -22,12 +22,17 @@ import org.ostara.cmd.BaseCmdLineCmd;
 import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 
+/**
+ * Executes an arbitrary operating system command line command.
+ */
 @Command(description = "command line task")
 public class CmdLineCmd extends BaseCmdLineCmd {
 
+	/** The execution directory for the command */
    @InParameter(name = "cmdDir")
    private String m_cmdDir;
 
+   /** The command line to execute */
    @InParameter(name = "cmdStr", requried = true)
    private String m_commandStr;
 

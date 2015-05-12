@@ -22,11 +22,17 @@ import org.ostara.cmd.BaseCmdLineCmd;
 import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 
+/**
+ * Creates a new local Git branch from an existing one.
+ */
 @Command(description = "git create branch command")
 public class GitBranchCmd extends BaseCmdLineCmd {
+	
+	/** The directory inside the local Git repository */
    @InParameter(name = "gitDir", requried = true)
    String m_execDir;
 
+   /** The existing branch */
    @InParameter(name = "gitBranch", requried = true)
    String m_branch;
 

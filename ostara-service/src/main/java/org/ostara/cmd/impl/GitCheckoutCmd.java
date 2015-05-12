@@ -22,6 +22,9 @@ import org.ostara.cmd.BaseCmdLineCmd;
 import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 
+/**
+ * TODO 
+ */
 @Command(description = "Git checkout command")
 public class GitCheckoutCmd extends BaseCmdLineCmd {
    @InParameter(name = "gitDir", requried = true)

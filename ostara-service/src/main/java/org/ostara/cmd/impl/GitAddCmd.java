@@ -22,8 +22,12 @@ import org.ostara.cmd.BaseCmdLineCmd;
 import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 
+/**
+ * Adds to the Git index the contents of the specified directory.
+ */
 @Command(description = "git add command")
 public class GitAddCmd extends BaseCmdLineCmd {
+	/** The directory to be added to Git */
    @InParameter(name = "gitDir", requried = true)
    String m_execDir;
 

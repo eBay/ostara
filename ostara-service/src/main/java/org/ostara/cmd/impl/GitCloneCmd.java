@@ -26,6 +26,9 @@ import org.ostara.cmd.annotation.OutParameter;
 import org.ostara.cmd.util.FileUtils;
 import org.ostara.config.Config;
 
+/**
+ * Clones a remote Git repository into a local repository.
+ */
 @Command(description = "git clone command line task.")
 public class GitCloneCmd extends BaseCmdLineCmd {
    @InParameter(name = "gitUrl", requried = true)

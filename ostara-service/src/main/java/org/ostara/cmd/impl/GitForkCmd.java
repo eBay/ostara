@@ -33,6 +33,9 @@ import org.ostara.cmd.annotation.InParameter;
 import org.ostara.cmd.annotation.OutParameter;
 import org.ostara.config.Config;
 
+/**
+ * Performs a remote fork of the repository in GitHub.
+ */
 @Command(description = "Git fork command")
 public class GitForkCmd extends BaseCommand {
    @InParameter(name = "gitUrl", requried = true)

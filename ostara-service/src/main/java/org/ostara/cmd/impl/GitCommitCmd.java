@@ -22,6 +22,9 @@ import org.ostara.cmd.BaseCmdLineCmd;
 import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 
+/**
+ * Commits the Git index to the local Git clone.
+ */
 @Command(description = "git commit command")
 public class GitCommitCmd extends BaseCmdLineCmd {
    private static final String COMMIT_MESSAGE = "anonymous commit";

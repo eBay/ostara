@@ -22,6 +22,9 @@ import org.ostara.cmd.annotation.Command;
 import org.ostara.cmd.annotation.InParameter;
 import org.ostara.cmd.util.FileUtils;
 
+/**
+ * Sample command showcasing a minimal transformation on a Maven POM file.
+ */
 @Command(description = "Platform version Upgrade Command")
 public class VersionUpgradeCmd extends BaseCommand {
    @InParameter(name = "execDir", requried = true)

@@ -30,6 +30,9 @@ import org.ostara.cmd.annotation.InParameter;
 import org.ostara.cmd.annotation.OutParameter;
 import org.ostara.cmd.util.FileUtils;
 
+/**
+ * TODO
+ */
 @Command(description = "Git release version command")
 public class GitReleaseVersionCmd extends BaseCmdLineCmd {
    @InParameter(name = "gitDir", requried = true)

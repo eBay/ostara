@@ -33,6 +33,9 @@ import org.ostara.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Creates a pull request in the remote GitHub installation.
+ */
 @Command(description = "Git pull request command")
 public class GitPullRequestCmd extends BaseCommand {
    @InParameter(name = "sourceGitUrl", requried = true)
