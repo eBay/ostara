@@ -44,7 +44,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom
 import grizzled.slf4j.Logger
 import grizzled.slf4j.Logging
 import org.ebaysf.ostara.telemetry.mongodb._
-import org.ebaysf.ostara.upgrade.paths.UpgradePath
+import org.ebaysf.ostara.upgrade.paths.UpgradeStep
 import org.ebaysf.ostara.upgrade.paths.UpgradeAddonRegistry
 import org.ebaysf.ostara.upgrade.paths.PreprocessResult
 import org.ebaysf.ostara.upgrade.paths.PlatformVersionManager
@@ -118,7 +118,7 @@ class UpgradeMain extends Logging {
   var line:CommandLine = null
   val options = new Options()
   
-  var upgradePath:Array[UpgradePath] = Array()
+  var upgradePath:Array[UpgradeStep] = Array()
   
   def urb:UpgradeReportBuilder = new UpgradeReportBuilder()
   
@@ -424,7 +424,7 @@ class UpgradeMain extends Logging {
     }
   }
   
-  def migrateProject(pomFile: File, parentPom:Model=null, doSavePom:Boolean=true, crtUpgradePaths:Array[UpgradePath] = upgradePath): Model = {
+  def migrateProject(pomFile: File, parentPom:Model=null, doSavePom:Boolean=true, crtUpgradePaths:Array[UpgradeStep] = upgradePath): Model = {
     info(s"Processing POM: ${pomFile.getAbsolutePath}")
     
 
@@ -481,7 +481,7 @@ class UpgradeMain extends Logging {
   
   def beforeMigratePom(parentPom:Model, model:Model) = {}
   
-  def migratePom(pomFile: File, parentPom: Model, crtReport:PomReport, crtUpgradePaths:Array[UpgradePath]): Model = {
+  def migratePom(pomFile: File, parentPom: Model, crtReport:PomReport, crtUpgradePaths:Array[UpgradeStep]): Model = {
     val model = MigratorUtils.readPom(pomFile)
     if (model == null) return null
     
@@ -582,7 +582,7 @@ class UpgradeMain extends Logging {
     return new ArrayList[Plugin](out) // Keep it a Java mutable list
   }
 
-  def processProject(model:Model, pomFile:File, parentPom:Model, crtReport:PomReport, crtUpgradePaths:Array[UpgradePath]) {
+  def processProject(model:Model, pomFile:File, parentPom:Model, crtReport:PomReport, crtUpgradePaths:Array[UpgradeStep]) {
     if(getPlatformAppTypes.size == 1 && getPlatformAppTypes()(0) == APP_TYPE_BATCH)processBatchProject(model, pomFile, crtUpgradePaths, crtReport)
     else model.getPackaging() match {
       case "war" => processWebOrServiceProject(model, pomFile, crtUpgradePaths, crtReport)
@@ -593,7 +593,7 @@ class UpgradeMain extends Logging {
     removeDistributionManagementAndRepositories(model)
   }
   
-  def processWebOrServiceProject(model:Model, pomFile:File, crtUpgradePaths:Array[UpgradePath] = upgradePath, crtReport:PomReport) {
+  def processWebOrServiceProject(model:Model, pomFile:File, crtUpgradePaths:Array[UpgradeStep] = upgradePath, crtReport:PomReport) {
     info("Procesing web or service project: " + model.getName)
 
     val introducedDependencies:java.util.List[Dependency] = new java.util.ArrayList[Dependency]()
@@ -655,7 +655,7 @@ class UpgradeMain extends Logging {
     model setPackaging "jar"
   }
   
-  def processBatchProject(model:Model, pomFile:File, crtUpgradePaths:Array[UpgradePath] = upgradePath, crtReport:PomReport) {
+  def processBatchProject(model:Model, pomFile:File, crtUpgradePaths:Array[UpgradeStep] = upgradePath, crtReport:PomReport) {
     info("Procesing batch project: " + model.getName)
     
     for(crtPath <- crtUpgradePaths) {
@@ -665,7 +665,7 @@ class UpgradeMain extends Logging {
   
   def afterProcessDependencyManagement(dependencyManagement:DependencyManagement) = {}
   
-  def processDependencyManagement(model:Model, crtReport:PomReport, bHasParent:Boolean, parentProperties:java.util.Properties, projectGroupId:String, projectType:String, crtUpgradePaths:Array[UpgradePath] = upgradePath): DependencyManagement = {
+  def processDependencyManagement(model:Model, crtReport:PomReport, bHasParent:Boolean, parentProperties:java.util.Properties, projectGroupId:String, projectType:String, crtUpgradePaths:Array[UpgradeStep] = upgradePath): DependencyManagement = {
     val dependencyManagement = new DependencyManagement();
     if (model.getDependencyManagement() != null) {
 
@@ -682,7 +682,7 @@ class UpgradeMain extends Logging {
   
   def afterProcessDependencies(deps:MutableList[NiceDependency]) = {}
   
-  def processDependencies(deps: List[Dependency], crtReport:PomReport, bHasParent: Boolean = false, crtUpgradePaths:Array[UpgradePath] = upgradePath, dependencyManagement:Boolean=false, projectGroupId:String=null, projectType:String=null): java.util.List[Dependency] = {
+  def processDependencies(deps: List[Dependency], crtReport:PomReport, bHasParent: Boolean = false, crtUpgradePaths:Array[UpgradeStep] = upgradePath, dependencyManagement:Boolean=false, projectGroupId:String=null, projectType:String=null): java.util.List[Dependency] = {
     val tmpList = new scala.collection.mutable.MutableList[NiceDependency]()
     var inputDeps = deps.map(MigratorUtils.createNiceDependency(_))
     
@@ -740,7 +740,7 @@ class UpgradeMain extends Logging {
    * one entry if the dependency was mapped
    * more entries if the dependency was unmerged
    */
-  def checkUpgradedDependencies(d:Dependency, crtReport:PomReport, customUpgradePath:Array[UpgradePath] = upgradePath) : List[NiceDependency] = {
+  def checkUpgradedDependencies(d:Dependency, crtReport:PomReport, customUpgradePath:Array[UpgradeStep] = upgradePath) : List[NiceDependency] = {
     var deps = List(MigratorUtils.createNiceDependency(d))
     
     for(p <- customUpgradePath) {
@@ -750,7 +750,7 @@ class UpgradeMain extends Logging {
     return deps
   }
   
-  def upgradeDependency(deps:List[NiceDependency], crtReport:PomReport, path:UpgradePath):List[NiceDependency] = {
+  def upgradeDependency(deps:List[NiceDependency], crtReport:PomReport, path:UpgradeStep):List[NiceDependency] = {
     var outDeps = MutableList[NiceDependency]()
 
     // The Dependency class isn't collections friendly (no override on equals(), hashmap()) so we're using implicit conversions

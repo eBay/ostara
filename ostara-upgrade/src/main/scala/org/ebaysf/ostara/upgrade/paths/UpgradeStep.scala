@@ -31,7 +31,7 @@ object PreprocessResult extends Enumeration {
   val DoNothing, RemoveProject = Value
 }
 
-abstract class UpgradePath {
+abstract class UpgradeStep {
   val PROJECT_TYPE_WAR = "war"
   val PROJECT_TYPE_ALL = "special all type"
   

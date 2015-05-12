@@ -27,7 +27,7 @@ trait PlatformVersionManager {
   
   def parseVersion(ver:String):PlatformVersion
   def processPlatformVersion(raptorPlatformVersion: String, parentVersion:PlatformVersion): String
-  def upgradePaths(raptorSourceVersion:PlatformVersion, raptorTargetVersion:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradePath]
+  def upgradePaths(raptorSourceVersion:PlatformVersion, raptorTargetVersion:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradeStep]
 }
 
 class DummyPlatformVersionManager extends PlatformVersionManager {
@@ -35,6 +35,6 @@ class DummyPlatformVersionManager extends PlatformVersionManager {
 
   def parseVersion(ver:String):PlatformVersion = dummyPlatformVersion
   def processPlatformVersion(raptorPlatformVersion: String, parentVersion:PlatformVersion): String = "0.1"
-  def upgradePaths(raptorSourceVersion:PlatformVersion, raptorTargetVersion:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradePath] = Array()
+  def upgradePaths(raptorSourceVersion:PlatformVersion, raptorTargetVersion:PlatformVersion, parent:Parent, crtReport:PomReport):Array[UpgradeStep] = Array()
 
 }
