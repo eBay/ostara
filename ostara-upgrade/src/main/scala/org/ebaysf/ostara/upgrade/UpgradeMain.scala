@@ -296,11 +296,11 @@ class UpgradeMain extends Logging {
     options	.addOption(INPUT_OPTION, "input", true, s"The project's root directory which contains the top-level pom or full path to the pom file. Defaults to pom.xml in current directory.")
             .addOption(HELP_OPTION, "help", false, s"Displays this help.")
         .addOption(PLATFORM_VERSION_OPTION, "platformversion", true, s"The project's platform version. Defaults to $platformVersion")
-        .addOption(APP_TYPE_OVERRIDE_OPTION, "appTypeOverride", true, s"Override the platform app type (one of Web, Service, Messaging or Batch). It will be autodetected if not specified.")
-        .addOption(SKIP_ADDONS_OPTION, "skipAddons", false, s"Do not run any addon operations (e.g. SLF4J Migrator).")
+        .addOption(APP_TYPE_OVERRIDE_OPTION, "appTypeOverride", true, s"Override the platform app type. It will be autodetected if not specified.")
+        .addOption(SKIP_ADDONS_OPTION, "skipAddons", false, s"Do not run any addon operations.")
         .addOption(DELETE_EBA_OPTION, "deleteEbaProject", false, "Physically deletes the EBA project, not just the reference from the top-level POM")
         .addOption(TASKID_OPTION, "taskid", true, "[Web UI only] Upgrade task ID")
-        .addOption(FORCE_LATEST_VERSION_OPTION, "forceLatestVersion", false, "Force updating versions of missing dependencies to the latest in ebaycentral")
+        .addOption(FORCE_LATEST_VERSION_OPTION, "forceLatestVersion", false, "Force updating versions of missing dependencies to the latest in platform repository")
         .addOption(DISABLE_BACKUP_OPTION, "disableBackup", false, "Do not take back up of the modified files")
         .addOption(DISABLE_ADDONS_OPTION, "disableAddons", true, s"Comma separated list of addons to be disabled. Available addons: ${UpgradeAddonRegistry.addons.map(_._1)}")
         
@@ -614,19 +614,7 @@ class UpgradeMain extends Logging {
    * This is a currently working mechanism to detect if a project is a SOA interface or implementation project because {@link #removeEclipseMetadata()} 
    * doesn't delete .project files for any SOA related project. Should that behavior change, this will have to be rethought.
    */
-  def isSOAProducerProject(model:Model, pomFile:File):Boolean={
-    val projectFile = new File(pomFile.getParent(), ".project")
-    
-    if(projectFile.exists()) {
-      val contents = FileUtils.readFileToString(projectFile)
-      
-      return contents.contains("com.ebay.soaframework.eclipse.SOACoreDomainDeployableNature") || 
-              contents.contains("com.ebay.soaframework.eclipse.SOADomainDeployableNature") ||
-              contents.contains("com.ebay.soaframework.eclipse.SOADeployableNature")
-    }
-    
-    return false
-  }
+  def isSOAProducerProject(model:Model, pomFile:File):Boolean=false
   
   def createWebResources(prjDir:File, config:Xpp3Dom):Xpp3Dom = {
     val V4_CONTENT_SOURCE = "content/v4contentsource"
@@ -889,7 +877,7 @@ import NiceDependency.ImplicitConversions._
   }
   
   /**
-   * @param dep The dependency to check. Its groupId might be updated in case it's an ebay customized thirparty artifact.
+   * @param dep The dependency to check. Its groupId might be updated in case it's a platform customized thirparty artifact.
    */
   def checkArtifactAvailability(dep:Dependency, updateToLatest:Boolean, crtReport:PomReport, properties:List[java.util.Properties]=List()):(List[String], List[String]) = {
     import PomReport._
@@ -913,7 +901,7 @@ import NiceDependency.ImplicitConversions._
 	          
 	          if(artifactExists(MAVEN_REPO_NEW_THIRDPARTY + buildArtifactUrl(dep, props=properties))) {
 	            if(StringUtils.isEmpty(dep.getVersion())) {
-	              crtReport.addMissingArtifact(dep, MISSING_THIRDPARTY ,s"Artifact containing ebay customizations is replacing the one with groupId ${origGID}. Could not detect a version.", List(MAVEN_REPO_OLD_THIRDPARTY))
+	              crtReport.addMissingArtifact(dep, MISSING_THIRDPARTY ,s"Artifact containing platform customizations is replacing the one with groupId ${origGID}. Could not detect a version.", List(MAVEN_REPO_OLD_THIRDPARTY))
 	              return (oldRepos, null)
 	            } else {
 	              if(artifactExists(MAVEN_REPO_NEW_THIRDPARTY + buildArtifactUrl(dep, true, props=properties))) {
@@ -925,7 +913,7 @@ import NiceDependency.ImplicitConversions._
 	                if(updateToLatest) {
 	                  if(latestVersion != null) {
 	                    dep.setVersion(latestVersion)
-	                    crtReport.addMissingArtifact(cloneDependency(dep, properties), NOT_MISSING, s"No exact version match found. Newest version of artifact containing ebay customizations is replacing the one with groupId $origGID", List(MAVEN_REPO_OLD_THIRDPARTY))
+	                    crtReport.addMissingArtifact(cloneDependency(dep, properties), NOT_MISSING, s"No exact version match found. Newest version of artifact containing platform customizations is replacing the one with groupId $origGID", List(MAVEN_REPO_OLD_THIRDPARTY))
 	                    return (oldRepos, List(MAVEN_REPO_NEW_THIRDPARTY))
 	                  } else {
 	                    warn(s"Could not retrieve latest version of $dep")
@@ -979,7 +967,7 @@ import NiceDependency.ImplicitConversions._
                 if(updateToLatest) {
                   if(latestVersion != null) {
                     if(missingRelease) {
-                      crtReport.addMissingArtifact(cloneDependency(dep, properties), MISSING_PROVIDER, s"No release version of provider found in ebaycentral.", oldRepos)
+                      crtReport.addMissingArtifact(cloneDependency(dep, properties), MISSING_PROVIDER, s"No release version of provider found in platform repository.", oldRepos)
                     } else {
                       crtReport.addMissingArtifact(dep, NOT_MISSING, s"No exact version match found. Picking newest version of artifact per user's request.", null)
                     }
@@ -994,16 +982,16 @@ import NiceDependency.ImplicitConversions._
                   }
                 } else {
                   if(missingRelease) {
-                      crtReport.addMissingArtifact(cloneDependency(dep, properties), MISSING_PROVIDER, s"No release version of provider found in ebaycentral. Temporarily you may use the latest snapshot version ($latestVersion) but ask its owner to release to ebaycentral.", oldRepos)
+                      crtReport.addMissingArtifact(cloneDependency(dep, properties), MISSING_PROVIDER, s"No release version of provider found in platform repository. Temporarily you may use the latest snapshot version ($latestVersion) but ask its owner to release to platform repository.", oldRepos)
                     } else {
-                    	crtReport.addMissingArtifact(dep, NOT_MISSING, s"No exact version match found in ebaycentral." + (if(latestVersion!=null)s" Consider using the latest available version $latestVersion." else ""), null)
+                    	crtReport.addMissingArtifact(dep, NOT_MISSING, s"No exact version match found in platform repository." + (if(latestVersion!=null)s" Consider using the latest available version $latestVersion." else ""), null)
                     }
                   return (oldRepos, null)
                 }
               }
             }
             
-            crtReport.addMissingArtifact(dep, MISSING_PROVIDER, s"Could not locate the dependency in the new Maven repositories. Please ask its owner to release a version to ebaycentral.", oldRepos)
+            crtReport.addMissingArtifact(dep, MISSING_PROVIDER, s"Could not locate the dependency in the new Maven repositories. Please ask its owner to release a version to platform repository.", oldRepos)
             return (oldRepos, null)
           }
         }
