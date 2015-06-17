@@ -33,7 +33,7 @@
   <!-- HEADER -->
   <header id="header">
     <div id="logo-group">
-      <span id="logo"><img src="${res.img.local.img['raptor2-launch1_png']}"
+      <span id="logo"><img src="resources/img/raptor2-launch1.png"
         alt="Platform Upgrades as a Service"></span> <span id="navtitle"
         class="navtitle">Platform Upgrades as a Service</span>
     </div>
@@ -84,7 +84,7 @@
 
       <!-- MAIN PANEL -->
       <div id="main" role="main">
-        <div class="themebox" style="background: url(${res.img.local.img.bg_jpg})"></div>
+        <div class="themebox" style="background: url(resources/img/bg.jpg)"></div>
         <div id="content">
           <div class="content-box">
             <form role="form" id="form" action="process">
