@@ -19,7 +19,7 @@
   </licenses>
 
   <properties>
-  	<resteasy.version>3.0.8.Final</resteasy.version>
+  	<resteasy.version>3.0.11.Final</resteasy.version>
   	<slf4j.version>1.7.12</slf4j.version>
   </properties>
 
